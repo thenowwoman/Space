@@ -35,8 +35,11 @@ export default async function handler(req, res) {
       }
     }
 
+        const GENERIC = /^(person|people|musician|musicians|singer|singers|songwriter|songwriters|record producer|record producers|rapper|artist)$/i;
+    const NOISE = /award|winner|nominee|engvarb|wikipedia|english-language|from (january|february|march|april|may|june|july|august|september|october|november|december)|\d{4}|births|living people/i;
+
     const signals = Object.entries(tally)
-    .filter(([name]) => !/award|winner|nominee/i.test(name))
+      .filter(([name]) => !GENERIC.test(name) && !NOISE.test(name))
       .sort((x, y) => y[1] - x[1])
       .slice(0, 8)
       .map(([name, count]) => ({ name, count }));

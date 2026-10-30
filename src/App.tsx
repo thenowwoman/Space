@@ -98,8 +98,8 @@ export default function App() {
 
           <div className="card">
             <h2>Positioning language</h2>
-            <p>“Made for {s[0]?.name} days.”</p>
-            {s[1] && <p>“{s[1].name}, styled for {city}.”</p>}
+            <p>“For the {s[0]?.name} crowd in {city}.”</p>
+{s[1] && <p>“Where {s[1].name} meets everyday style.”</p>}
             <p className="muted">Drafted from your top signals. Edit freely.</p>
           </div>
 
