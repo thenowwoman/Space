@@ -15,8 +15,7 @@ export default async function handler(req, res) {
       results.find((x) => x.name?.toLowerCase() === a.toLowerCase()) || results[0];
     if (!hit) continue;
     found.push({ anchor: a, matched: hit.name });
-    for (const t of hit.tags || []) tally[t.name] = (tally[t.name] || 0) + 1;
-  }
+       for (const n of new Set((hit.tags || []).map((t) => t.name))) tally[n] = (tally[n] || 0) + 1;
 
   const signals = Object.entries(tally)
     .sort((x, y) => y[1] - x[1])
