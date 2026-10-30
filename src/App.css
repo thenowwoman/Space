@@ -200,4 +200,6 @@ button { margin-top:20px; padding:14px 22px; border:0; border-radius:14px; backg
     right: 0;
     border-right-color: var(--border);
   }
-}
+}.wrap { text-align: left; }
+.wrap h1, .wrap h2 { color: var(--teal); }
+.wrap .dark h2, .wrap .dark p { color: var(--ivory); }

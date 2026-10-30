@@ -36,6 +36,7 @@ export default async function handler(req, res) {
     }
 
     const signals = Object.entries(tally)
+    .filter(([name]) => !/award|winner|nominee/i.test(name))
       .sort((x, y) => y[1] - x[1])
       .slice(0, 8)
       .map(([name, count]) => ({ name, count }));
