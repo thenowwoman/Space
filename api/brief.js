@@ -25,36 +25,32 @@ export default async function handler(req, res) {
       })
     );
 
-        const KEEP = /(genre|style|influence|mood|keyword|descriptor)/i;
-    const NOISE = /award|winner|nominee/i;
+    const KEEP = /(genre|style|influence|mood|keyword|descriptor)/i;
+    const NOISE = /award|winner|nominee|alumni|university|records artists|engvarb|wikipedia|\d{4}/i;
+    const GENERIC = /^(person|people|musician|musicians|singer|singers|songwriter|songwriters|record producer|record producers|rapper|artist)$/i;
 
-    const tally = {};
-    const found = [];
-    for (const item of lookups) {
-      if (!item) continue;
-      found.push({ anchor: item.anchor, matched: item.hit.name });
-      const names = (item.hit.tags || [])
-        .filter((t) => KEEP.test(t.type || "") && !NOISE.test(t.name || ""))
-        .map((t) => t.name);
-      for (const n of new Set(names)) tally[n] = (tally[n] || 0) + 1;
-    }
-
-    const signals = Object.entries(tally)
-      .sort((x, y) => y[1] - x[1])
-      .slice(0, 8)
-      .map(([name, count]) => ({ name, count })); {
-        tally[n] = (tally[n] || 0) + 1;
+    const build = (useTypes) => {
+      const tally = {};
+      for (const item of lookups) {
+        if (!item) continue;
+        const names = (item.hit.tags || [])
+          .filter((t) => !useTypes || KEEP.test(String(t.type || "")))
+          .map((t) => String(t.name || ""))
+          .filter((n) => n && !NOISE.test(n) && !GENERIC.test(n));
+        for (const n of new Set(names)) tally[n] = (tally[n] || 0) + 1;
       }
-    }
+      return Object.entries(tally)
+        .sort((x, y) => y[1] - x[1])
+        .slice(0, 8)
+        .map(([name, count]) => ({ name, count }));
+    };
 
-        const GENERIC = /^(person|people|musician|musicians|singer|singers|songwriter|songwriters|record producer|record producers|rapper|artist)$/i;
-    const NOISE = /award|winner|nominee|engvarb|wikipedia|english-language|from (january|february|march|april|may|june|july|august|september|october|november|december)|\d{4}|births|living people/i;
+    const found = lookups
+      .filter(Boolean)
+      .map((l) => ({ anchor: l.anchor, matched: l.hit.name }));
 
-    const signals = Object.entries(tally)
-      .filter(([name]) => !GENERIC.test(name) && !NOISE.test(name))
-      .sort((x, y) => y[1] - x[1])
-      .slice(0, 8)
-      .map(([name, count]) => ({ name, count }));
+    let signals = build(true);
+    if (!signals.length) signals = build(false);
 
     res.status(200).json({ found, signals });
   } catch (e) {
