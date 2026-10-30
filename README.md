@@ -1,32 +1,22 @@
-# React + TypeScript + Vite
+# Space
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Space is an African demand intelligence agent. A seller names the artists their audience loves, and Space uses Qloo's taste graph to find the taste signals those audiences share, then turns them into a Demand Brief.
 
-Currently, two official plugins are available:
+**Live demo:** https://space-sepia-rho.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## How Qloo powers it
+1. The seller enters up to 5 audience anchors (for example Burna Boy, Tems, Asake).
+2. A server function searches each anchor in Qloo and picks the exact-name match.
+3. It reads each entity's taste tags from Qloo and counts which tags the anchors share.
+4. The brief shows the strongest signals, the matched entities, and drafted positioning lines.
 
-## React Compiler
+All signals come from Qloo's data. Without Qloo there is nothing to read.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run locally
+Run `npm install`. Set `QLOO_API_KEY` and `QLOO_BASE_URL=https://hackathon.api.qloo.com` as environment variables, then run `vercel dev`. Keep the key server-side only.
 
-## Expanding the Oxlint configuration
+## Limits
+Space surfaces real taste signals and drafts positioning from them. It does not yet name specific products to stock, and music anchors work best. Food and fashion anchors are next.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## License
+MIT
