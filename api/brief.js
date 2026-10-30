@@ -25,12 +25,24 @@ export default async function handler(req, res) {
       })
     );
 
+        const KEEP = /(genre|style|influence|mood|keyword|descriptor)/i;
+    const NOISE = /award|winner|nominee/i;
+
     const tally = {};
     const found = [];
     for (const item of lookups) {
       if (!item) continue;
       found.push({ anchor: item.anchor, matched: item.hit.name });
-      for (const n of new Set((item.hit.tags || []).map((t) => t.name))) {
+      const names = (item.hit.tags || [])
+        .filter((t) => KEEP.test(t.type || "") && !NOISE.test(t.name || ""))
+        .map((t) => t.name);
+      for (const n of new Set(names)) tally[n] = (tally[n] || 0) + 1;
+    }
+
+    const signals = Object.entries(tally)
+      .sort((x, y) => y[1] - x[1])
+      .slice(0, 8)
+      .map(([name, count]) => ({ name, count })); {
         tally[n] = (tally[n] || 0) + 1;
       }
     }
